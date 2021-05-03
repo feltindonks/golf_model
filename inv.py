@@ -3,10 +3,15 @@ import pandas as pd
 import csv
 import argparse
 
-file_name = 'valspar_championship_win_european.csv'
+file_name = 'wel_win_3_noon.csv'
 mod_file = str('edit_' + str(file_name))
-#top = 1
+def_top = 1
 df = pd.read_csv(file_name)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--top', default=def_top)
+args = parser.parse_args()
+top = args.top
 #drops ev columns
 df = df[df.columns.drop(list(df.filter(regex='_ev')))]
 
@@ -22,8 +27,9 @@ df = df[df.columns.drop(list(df.filter(regex='_odds')))]
 #change inf to nan
 df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-#sums  = df.sum(axis = 0, skipna = True, numeric_only = True)
-#print (sums / top)
+sums  = df.sum(axis = 0, skipna = True, numeric_only = True)
+print ("top is" + str(top))
+print ("sums/top:" + str(sums / int(top)))
 print (df.head())
 print('find csv @ ' + mod_file)
 df.to_csv(mod_file, index=False) #index=False means no index column @ col[0]
